@@ -1,4 +1,5 @@
 """Pruebas del cotizador."""
+
 import pytest
 
 from src.cotizador import Cotizador
@@ -36,3 +37,12 @@ def test_cotizar_descuento_invalido():
     cotizador = Cotizador()
     with pytest.raises(ValueError):
         cotizador.cotizar([], descuento=50)
+
+
+def test_carrito_no_se_comparte_entre_cotizaciones():
+    """Regresion: el carrito por defecto no debe persistir entre llamadas."""
+    primero = Cotizador().agregar_item("CAM-001", 1)
+    segundo = Cotizador().agregar_item("PAN-007", 1)
+    assert len(segundo) == 1
+    assert segundo[0]["sku"] == "PAN-007"
+    assert primero is not segundo

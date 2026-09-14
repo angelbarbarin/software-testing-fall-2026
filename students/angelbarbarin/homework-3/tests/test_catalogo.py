@@ -1,17 +1,18 @@
 """Pruebas del catalogo de productos."""
+
 from src.catalogo import Catalogo
 
 
 def test_obtener_producto_existente():
     catalogo = Catalogo()
-    producto = catalogo.ObtenerProducto("CAM-001")
+    producto = catalogo.obtener_producto("CAM-001")
     assert producto is not None
     assert producto["precio"] == 850.0
 
 
 def test_obtener_producto_inexistente():
     catalogo = Catalogo()
-    assert catalogo.ObtenerProducto("NO-EXISTE") is None
+    assert catalogo.obtener_producto("NO-EXISTE") is None
 
 
 def test_listar_por_categoria():
