@@ -6,8 +6,8 @@
 [MAIN]
 # El paquete src se importa como "src.modulo" desde las pruebas.
 init-hook='import sys; sys.path.insert(0, ".")'
+# 0 = usar todos los nucleos disponibles.
 jobs=0
-suggestion-mode=yes
 
 [MESSAGES CONTROL]
 disable=
