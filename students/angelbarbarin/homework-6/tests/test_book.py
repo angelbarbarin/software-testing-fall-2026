@@ -22,3 +22,9 @@ def test_book_starts_with_all_copies_available():
 
 def test_book_is_available_when_copies_exist():
     assert make_book(copies=1).is_available() is True
+
+
+def test_borrow_decreases_available_copies():
+    book = make_book(copies=2)
+    book.borrow()
+    assert book.available_copies == 1
