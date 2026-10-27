@@ -1,19 +1,24 @@
 """Library catalog and lending operations."""
 
+from datetime import date
+
 from exceptions import (
     AlreadyBorrowedError,
     BookNotFoundError,
     BorrowLimitExceededError,
     MemberNotFoundError,
 )
+from loan import Loan
 
 
 class Library:
     """Coordinates the catalog, the members and their loans."""
 
-    def __init__(self):
+    def __init__(self, clock=date.today):
         self._books = {}
         self._members = {}
+        self._loans = {}
+        self._clock = clock
 
     def add_book(self, book):
         self._books[book.isbn] = book
@@ -33,6 +38,10 @@ class Library:
         self._ensure_can_borrow(member, isbn)
         book.borrow()
         member.add_borrowed_book(isbn)
+        self._loans[(member_id, isbn)] = Loan(member_id, isbn, self._clock())
+
+    def get_loan(self, member_id, isbn):
+        return self._loans[(member_id, isbn)]
 
     def return_book(self, member_id, isbn):
         member = self.get_member(member_id)
