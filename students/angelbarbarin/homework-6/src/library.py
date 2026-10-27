@@ -45,7 +45,9 @@ class Library:
         return self._loans[(member_id, isbn)]
 
     def calculate_late_fee(self, member_id, isbn):
-        return Decimal("0")
+        loan = self.get_loan(member_id, isbn)
+        days_overdue = max(0, (self._clock() - loan.due_date).days)
+        return days_overdue * Decimal("1.00")
 
     def return_book(self, member_id, isbn):
         member = self.get_member(member_id)
