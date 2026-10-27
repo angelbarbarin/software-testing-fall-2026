@@ -1,6 +1,6 @@
 import pytest
 
-from exceptions import BorrowLimitExceededError
+from exceptions import BorrowLimitExceededError, InvalidReturnError
 from member import Member
 
 
@@ -39,3 +39,8 @@ def test_return_book_removes_isbn():
     member.add_borrowed_book("0306406152")
     member.return_book("0306406152")
     assert member.borrowed_books == []
+
+
+def test_return_book_raises_when_book_was_not_borrowed():
+    with pytest.raises(InvalidReturnError):
+        Member("M001", "Ana Lopez").return_book("0306406152")
