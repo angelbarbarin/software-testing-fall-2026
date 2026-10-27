@@ -30,10 +30,7 @@ class Library:
     def borrow_book(self, member_id, isbn):
         book = self.get_book(isbn)
         member = self.get_member(member_id)
-        if isbn in member.borrowed_books:
-            raise AlreadyBorrowedError(f"{member.name} already has {isbn}")
-        if not member.can_borrow():
-            raise BorrowLimitExceededError(f"{member.name} reached the borrow limit")
+        self._ensure_can_borrow(member, isbn)
         book.borrow()
         member.add_borrowed_book(isbn)
 
@@ -55,6 +52,13 @@ class Library:
     def _search(self, field, term):
         term = term.lower()
         return [b for b in self._books.values() if term in getattr(b, field).lower()]
+
+    @staticmethod
+    def _ensure_can_borrow(member, isbn):
+        if isbn in member.borrowed_books:
+            raise AlreadyBorrowedError(f"{member.name} already has {isbn}")
+        if not member.can_borrow():
+            raise BorrowLimitExceededError(f"{member.name} reached the borrow limit")
 
     @staticmethod
     def _lookup(registry, key, error):
