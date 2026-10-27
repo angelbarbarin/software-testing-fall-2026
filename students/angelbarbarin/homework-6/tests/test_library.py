@@ -13,14 +13,6 @@ from member import Member
 ISBN = "0306406152"
 
 
-@pytest.fixture
-def library():
-    lib = Library()
-    lib.add_book(Book(ISBN, "Clean Code", "Robert C. Martin", total_copies=2))
-    lib.register_member(Member("M001", "Ana Lopez"))
-    return lib
-
-
 def test_add_book_makes_it_findable_by_isbn():
     library = Library()
     book = Book(ISBN, "Clean Code", "Robert C. Martin")
