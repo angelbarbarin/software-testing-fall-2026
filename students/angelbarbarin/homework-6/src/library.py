@@ -42,6 +42,9 @@ class Library:
     def search_by_author(self, author):
         return self._search("author", author)
 
+    def get_available_books(self):
+        return [book for book in self._books.values() if book.is_available()]
+
     def _search(self, field, term):
         term = term.lower()
         return [b for b in self._books.values() if term in getattr(b, field).lower()]
