@@ -30,6 +30,12 @@ class Library:
         book.borrow()
         member.add_borrowed_book(isbn)
 
+    def return_book(self, member_id, isbn):
+        member = self.get_member(member_id)
+        book = self.get_book(isbn)
+        member.return_book(isbn)
+        book.return_copy()
+
     @staticmethod
     def _lookup(registry, key, error):
         if key not in registry:
