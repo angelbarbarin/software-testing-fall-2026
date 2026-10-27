@@ -59,3 +59,9 @@ def test_book_rejects_invalid_isbn(isbn):
 
 def test_book_normalizes_isbn_with_hyphens():
     assert make_book(isbn="978-0-13-235088-4").isbn == "9780132350884"
+
+
+@pytest.mark.parametrize("title", ["", "   "])
+def test_book_requires_title(title):
+    with pytest.raises(ValueError):
+        make_book(title=title)
