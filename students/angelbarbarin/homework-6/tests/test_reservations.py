@@ -1,6 +1,7 @@
 import pytest
 
 from book import Book
+from exceptions import ReservationError
 from library import Library
 from member import Member
 
@@ -21,3 +22,8 @@ def test_reservations_are_kept_in_fifo_order(busy_library):
     busy_library.reserve_book("M002", ISBN)
     busy_library.reserve_book("M003", ISBN)
     assert busy_library.reservations_for(ISBN) == ["M002", "M003"]
+
+
+def test_reserve_book_rejects_book_with_copies(library):
+    with pytest.raises(ReservationError):
+        library.reserve_book("M001", ISBN)
