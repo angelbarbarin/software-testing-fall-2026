@@ -22,3 +22,6 @@ class Book:
         if not self.is_available():
             raise BookNotAvailableError(f"No copies of {self.isbn} are available")
         self.available_copies -= 1
+
+    def return_copy(self):
+        self.available_copies += 1
