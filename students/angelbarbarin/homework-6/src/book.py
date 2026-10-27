@@ -7,6 +7,7 @@ class Book:
     """A title in the catalog with a number of physical copies."""
 
     def __init__(self, isbn, title, author, total_copies=1):
+        isbn = isbn.replace("-", "")
         if not (isbn.isdigit() and len(isbn) in (10, 13)):
             raise ValueError("ISBN must have 10 or 13 digits")
         self.isbn = isbn
