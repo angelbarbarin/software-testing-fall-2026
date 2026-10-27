@@ -56,3 +56,17 @@ def test_return_book_restores_copy(library):
     library.borrow_book("M001", ISBN)
     library.return_book("M001", ISBN)
     assert library.get_book(ISBN).available_copies == 2
+
+
+@pytest.fixture
+def catalog():
+    lib = Library()
+    lib.add_book(Book("0306406152", "Clean Code", "Robert C. Martin"))
+    lib.add_book(Book("9780132350884", "The Clean Coder", "Robert C. Martin"))
+    lib.add_book(Book("9780201633610", "Design Patterns", "Erich Gamma", 0))
+    return lib
+
+
+def test_search_by_title_is_partial_and_case_insensitive(catalog):
+    titles = [book.title for book in catalog.search_by_title("clean")]
+    assert titles == ["Clean Code", "The Clean Coder"]
