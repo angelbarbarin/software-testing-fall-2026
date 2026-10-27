@@ -38,3 +38,10 @@ def test_total_fees_add_every_overdue_loan_of_member(library, clock):
     library.borrow_book("M001", "9780132350884")
     clock.advance(16)
     assert library.total_fees_for_member("M001") == Decimal("4.00")
+
+
+def test_total_fees_include_books_returned_late(library, clock):
+    library.borrow_book("M001", ISBN)
+    clock.advance(20)
+    library.return_book("M001", ISBN)
+    assert library.total_fees_for_member("M001") == Decimal("6.00")
