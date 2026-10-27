@@ -1,15 +1,37 @@
 """Library member."""
 
+from enum import Enum
+
 from exceptions import BorrowLimitExceededError, InvalidReturnError
+
+
+class MemberCategory(Enum):
+    """Kinds of members with different lending rules."""
+
+    STUDENT = "student"
+    FACULTY = "faculty"
+    PUBLIC = "public"
+
+
+BORROW_LIMITS = {
+    MemberCategory.STUDENT: 3,
+    MemberCategory.FACULTY: 5,
+    MemberCategory.PUBLIC: 2,
+}
 
 
 class Member:
     """A registered person who can borrow books."""
 
-    def __init__(self, member_id, name, max_borrow_limit=3):
+    def __init__(
+        self, member_id, name, max_borrow_limit=None, category=MemberCategory.STUDENT
+    ):
         self.member_id = member_id
         self.name = name
         self.borrowed_books = []
+        self.category = category
+        if max_borrow_limit is None:
+            max_borrow_limit = BORROW_LIMITS[category]
         self.max_borrow_limit = max_borrow_limit
 
     def can_borrow(self):
