@@ -19,3 +19,7 @@ class BorrowLimitExceededError(LibraryError):
 
 class MemberNotFoundError(LibraryError):
     """Raised when a member id is not registered."""
+
+
+class BookNotFoundError(LibraryError):
+    """Raised when an ISBN is not part of the catalog."""

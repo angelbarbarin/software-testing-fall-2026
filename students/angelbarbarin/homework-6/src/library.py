@@ -1,6 +1,6 @@
 """Library catalog and lending operations."""
 
-from exceptions import MemberNotFoundError
+from exceptions import BookNotFoundError, MemberNotFoundError
 
 
 class Library:
@@ -14,6 +14,8 @@ class Library:
         self._books[book.isbn] = book
 
     def get_book(self, isbn):
+        if isbn not in self._books:
+            raise BookNotFoundError(f"Book {isbn} is not in the catalog")
         return self._books[isbn]
 
     def register_member(self, member):
