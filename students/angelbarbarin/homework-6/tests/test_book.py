@@ -1,6 +1,7 @@
 import pytest
 
-from book import Book, BookNotAvailableError, InvalidReturnError
+from book import Book
+from exceptions import BookNotAvailableError, InvalidReturnError
 
 ISBN = "0306406152"
 

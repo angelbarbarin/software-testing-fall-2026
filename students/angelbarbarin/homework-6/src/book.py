@@ -1,12 +1,6 @@
 """Book entity of the library catalog."""
 
-
-class BookNotAvailableError(Exception):
-    """Raised when no copies of a book are available."""
-
-
-class InvalidReturnError(Exception):
-    """Raised when returning a copy that was never lent."""
+from exceptions import BookNotAvailableError, InvalidReturnError
 
 
 class Book:
