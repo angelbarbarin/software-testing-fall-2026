@@ -49,3 +49,9 @@ def test_return_copy_increases_available_copies():
 def test_return_copy_raises_when_all_copies_are_in_library():
     with pytest.raises(InvalidReturnError):
         make_book(copies=1).return_copy()
+
+
+@pytest.mark.parametrize("isbn", ["123", "12345678901", "abcdefghij"])
+def test_book_rejects_invalid_isbn(isbn):
+    with pytest.raises(ValueError):
+        make_book(isbn=isbn)
