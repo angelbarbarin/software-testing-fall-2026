@@ -1,0 +1,14 @@
+"""Library catalog and lending operations."""
+
+
+class Library:
+    """Coordinates the catalog, the members and their loans."""
+
+    def __init__(self):
+        self._books = {}
+
+    def add_book(self, book):
+        self._books[book.isbn] = book
+
+    def get_book(self, isbn):
+        return self._books[isbn]
