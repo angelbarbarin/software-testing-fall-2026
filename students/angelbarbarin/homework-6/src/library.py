@@ -56,8 +56,7 @@ class Library:
         book = self.get_book(isbn)
         member.return_book(isbn)
         book.return_copy()
-        self._charged_fees[member_id] += self.calculate_late_fee(member_id, isbn)
-        del self._loans[(member_id, isbn)]
+        self._close_loan(member_id, isbn)
 
     def total_fees_for_member(self, member_id):
         member = self.get_member(member_id)
@@ -78,6 +77,10 @@ class Library:
     def _search(self, field, term):
         term = term.lower()
         return [b for b in self._books.values() if term in getattr(b, field).lower()]
+
+    def _close_loan(self, member_id, isbn):
+        self._charged_fees[member_id] += self.calculate_late_fee(member_id, isbn)
+        del self._loans[(member_id, isbn)]
 
     @staticmethod
     def _ensure_can_borrow(member, isbn):
