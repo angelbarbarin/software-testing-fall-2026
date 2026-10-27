@@ -1,6 +1,10 @@
 """Book entity of the library catalog."""
 
 
+class BookNotAvailableError(Exception):
+    """Raised when no copies of a book are available."""
+
+
 class Book:
     """A title in the catalog with a number of physical copies."""
 
@@ -15,4 +19,6 @@ class Book:
         return self.available_copies > 0
 
     def borrow(self):
+        if not self.is_available():
+            raise BookNotAvailableError(f"No copies of {self.isbn} are available")
         self.available_copies -= 1
