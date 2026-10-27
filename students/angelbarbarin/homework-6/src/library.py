@@ -1,6 +1,6 @@
 """Library catalog and lending operations."""
 
-from collections import defaultdict, deque
+from collections import defaultdict
 from datetime import date
 from decimal import Decimal
 
@@ -12,6 +12,7 @@ from exceptions import (
     ReservationError,
 )
 from loan import Loan
+from reservation import ReservationQueue
 
 
 class NullNotifier:
@@ -30,7 +31,7 @@ class Library:
         self._loans = {}
         self._clock = clock
         self._charged_fees = defaultdict(Decimal)
-        self._reservations = defaultdict(deque)
+        self._reservations = ReservationQueue()
         self._notifier = notifier or NullNotifier()
 
     def add_book(self, book):
@@ -67,9 +68,9 @@ class Library:
         member.return_book(isbn)
         book.return_copy()
         self._close_loan(member_id, isbn)
-        queue = self._reservations[isbn]
-        if queue:
-            self._notifier.notify(queue.popleft(), book)
+        next_member = self._reservations.pop_next(isbn)
+        if next_member is not None:
+            self._notifier.notify(next_member, book)
 
     def total_fees_for_member(self, member_id):
         member = self.get_member(member_id)
@@ -82,10 +83,10 @@ class Library:
         self.get_member(member_id)
         if self.get_book(isbn).is_available():
             raise ReservationError(f"{isbn} has copies available, borrow it instead")
-        self._reservations[isbn].append(member_id)
+        self._reservations.add(isbn, member_id)
 
     def reservations_for(self, isbn):
-        return list(self._reservations[isbn])
+        return self._reservations.members_waiting(isbn)
 
     def search_by_title(self, title):
         return self._search("title", title)
