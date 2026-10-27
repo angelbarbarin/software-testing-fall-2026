@@ -2,21 +2,31 @@
 
 from exceptions import BookNotAvailableError, InvalidReturnError
 
+VALID_ISBN_LENGTHS = (10, 13)
+
 
 class Book:
     """A title in the catalog with a number of physical copies."""
 
     def __init__(self, isbn, title, author, total_copies=1):
-        isbn = isbn.replace("-", "")
-        if not (isbn.isdigit() and len(isbn) in (10, 13)):
-            raise ValueError("ISBN must have 10 or 13 digits")
-        self.isbn = isbn
-        if not title.strip():
-            raise ValueError("Title is required")
-        self.title = title
+        self.isbn = self._normalize_isbn(isbn)
+        self.title = self._validate_title(title)
         self.author = author
         self.total_copies = total_copies
         self.available_copies = total_copies
+
+    @staticmethod
+    def _normalize_isbn(isbn):
+        digits = isbn.replace("-", "")
+        if not (digits.isdigit() and len(digits) in VALID_ISBN_LENGTHS):
+            raise ValueError("ISBN must have 10 or 13 digits")
+        return digits
+
+    @staticmethod
+    def _validate_title(title):
+        if not title.strip():
+            raise ValueError("Title is required")
+        return title
 
     def is_available(self):
         return self.available_copies > 0
