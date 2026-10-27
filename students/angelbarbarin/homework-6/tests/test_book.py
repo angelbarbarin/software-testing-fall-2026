@@ -55,3 +55,7 @@ def test_return_copy_raises_when_all_copies_are_in_library():
 def test_book_rejects_invalid_isbn(isbn):
     with pytest.raises(ValueError):
         make_book(isbn=isbn)
+
+
+def test_book_normalizes_isbn_with_hyphens():
+    assert make_book(isbn="978-0-13-235088-4").isbn == "9780132350884"
