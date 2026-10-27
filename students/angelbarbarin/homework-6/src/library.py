@@ -36,6 +36,10 @@ class Library:
         member.return_book(isbn)
         book.return_copy()
 
+    def search_by_title(self, title):
+        term = title.lower()
+        return [book for book in self._books.values() if term in book.title.lower()]
+
     @staticmethod
     def _lookup(registry, key, error):
         if key not in registry:
