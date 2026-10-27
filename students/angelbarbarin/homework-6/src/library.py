@@ -19,3 +19,9 @@ class Library:
 
     def get_member(self, member_id):
         return self._members[member_id]
+
+    def borrow_book(self, member_id, isbn):
+        book = self.get_book(isbn)
+        member = self.get_member(member_id)
+        book.borrow()
+        member.add_borrowed_book(isbn)
