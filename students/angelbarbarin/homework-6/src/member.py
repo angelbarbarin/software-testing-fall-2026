@@ -1,5 +1,6 @@
 """Library member."""
 
+from decimal import Decimal
 from enum import Enum
 
 from exceptions import BorrowLimitExceededError, InvalidReturnError
@@ -19,6 +20,12 @@ BORROW_LIMITS = {
     MemberCategory.PUBLIC: 2,
 }
 
+DAILY_LATE_FEES = {
+    MemberCategory.STUDENT: Decimal("1.00"),
+    MemberCategory.FACULTY: Decimal("0.50"),
+    MemberCategory.PUBLIC: Decimal("1.50"),
+}
+
 
 class Member:
     """A registered person who can borrow books."""
@@ -33,6 +40,10 @@ class Member:
         if max_borrow_limit is None:
             max_borrow_limit = BORROW_LIMITS[category]
         self.max_borrow_limit = max_borrow_limit
+
+    @property
+    def daily_late_fee(self):
+        return DAILY_LATE_FEES[self.category]
 
     def can_borrow(self):
         return len(self.borrowed_books) < self.max_borrow_limit
