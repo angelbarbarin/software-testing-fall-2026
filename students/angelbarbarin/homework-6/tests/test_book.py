@@ -1,6 +1,6 @@
 import pytest
 
-from book import Book, BookNotAvailableError
+from book import Book, BookNotAvailableError, InvalidReturnError
 
 ISBN = "0306406152"
 
@@ -43,3 +43,8 @@ def test_return_copy_increases_available_copies():
     book.borrow()
     book.return_copy()
     assert book.available_copies == 1
+
+
+def test_return_copy_raises_when_all_copies_are_in_library():
+    with pytest.raises(InvalidReturnError):
+        make_book(copies=1).return_copy()
