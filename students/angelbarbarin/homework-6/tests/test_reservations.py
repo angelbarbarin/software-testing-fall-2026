@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 import pytest
 
 from book import Book
@@ -9,8 +11,13 @@ ISBN = "0306406152"
 
 
 @pytest.fixture
-def busy_library(clock):
-    library = Library(clock=clock)
+def notifier():
+    return Mock()
+
+
+@pytest.fixture
+def busy_library(clock, notifier):
+    library = Library(clock=clock, notifier=notifier)
     library.add_book(Book(ISBN, "Clean Code", "Robert C. Martin"))
     for member_id in ("M001", "M002", "M003"):
         library.register_member(Member(member_id, f"Member {member_id}"))
@@ -32,3 +39,10 @@ def test_reserve_book_rejects_book_with_copies(library):
 def test_reserve_book_rejects_unknown_member(busy_library):
     with pytest.raises(MemberNotFoundError):
         busy_library.reserve_book("M999", ISBN)
+
+
+def test_return_book_notifies_first_member_in_queue(busy_library, notifier):
+    busy_library.reserve_book("M002", ISBN)
+    busy_library.reserve_book("M003", ISBN)
+    busy_library.return_book("M001", ISBN)
+    notifier.notify.assert_called_once_with("M002", busy_library.get_book(ISBN))
