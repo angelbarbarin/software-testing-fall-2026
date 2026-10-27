@@ -32,3 +32,10 @@ def test_add_borrowed_book_raises_when_limit_reached():
     member.add_borrowed_book("0306406152")
     with pytest.raises(BorrowLimitExceededError):
         member.add_borrowed_book("9780132350884")
+
+
+def test_return_book_removes_isbn():
+    member = Member("M001", "Ana Lopez")
+    member.add_borrowed_book("0306406152")
+    member.return_book("0306406152")
+    assert member.borrowed_books == []
