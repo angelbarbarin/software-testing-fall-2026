@@ -17,3 +17,6 @@ class Loan:
     @property
     def due_date(self):
         return self.borrowed_on + LOAN_PERIOD
+
+    def days_overdue(self, today):
+        return max(0, (today - self.due_date).days)
