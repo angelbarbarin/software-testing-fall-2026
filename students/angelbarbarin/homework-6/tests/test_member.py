@@ -1,7 +1,7 @@
 import pytest
 
 from exceptions import BorrowLimitExceededError, InvalidReturnError
-from member import Member
+from member import Member, MemberCategory
 
 CLEAN_CODE = "0306406152"
 CLEAN_CODER = "9780132350884"
@@ -47,3 +47,15 @@ def test_return_book_removes_isbn():
 def test_return_book_raises_when_book_was_not_borrowed():
     with pytest.raises(InvalidReturnError):
         Member("M001", "Ana Lopez").return_book(CLEAN_CODE)
+
+
+@pytest.mark.parametrize(
+    ("category", "limit"),
+    [
+        (MemberCategory.STUDENT, 3),
+        (MemberCategory.FACULTY, 5),
+        (MemberCategory.PUBLIC, 2),
+    ],
+)
+def test_borrow_limit_depends_on_member_category(category, limit):
+    assert Member("M002", "Dra. Ruiz", category=category).max_borrow_limit == limit
