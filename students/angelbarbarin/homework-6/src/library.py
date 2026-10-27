@@ -1,5 +1,6 @@
 """Library catalog and lending operations."""
 
+from collections import defaultdict
 from datetime import date
 from decimal import Decimal
 
@@ -20,6 +21,7 @@ class Library:
         self._members = {}
         self._loans = {}
         self._clock = clock
+        self._charged_fees = defaultdict(Decimal)
 
     def add_book(self, book):
         self._books[book.isbn] = book
@@ -54,13 +56,15 @@ class Library:
         book = self.get_book(isbn)
         member.return_book(isbn)
         book.return_copy()
+        self._charged_fees[member_id] += self.calculate_late_fee(member_id, isbn)
+        del self._loans[(member_id, isbn)]
 
     def total_fees_for_member(self, member_id):
         member = self.get_member(member_id)
         fees = (
             self.calculate_late_fee(member_id, isbn) for isbn in member.borrowed_books
         )
-        return sum(fees, Decimal("0"))
+        return sum(fees, self._charged_fees[member_id])
 
     def search_by_title(self, title):
         return self._search("title", title)
