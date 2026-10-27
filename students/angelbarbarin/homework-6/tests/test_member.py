@@ -8,3 +8,7 @@ def test_member_is_created_without_borrowed_books():
         "Ana Lopez",
         [],
     )
+
+
+def test_member_has_default_borrow_limit_of_three():
+    assert Member("M001", "Ana Lopez").max_borrow_limit == 3
