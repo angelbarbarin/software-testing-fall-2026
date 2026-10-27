@@ -65,3 +65,8 @@ def test_book_normalizes_isbn_with_hyphens():
 def test_book_requires_title(title):
     with pytest.raises(ValueError):
         make_book(title=title)
+
+
+def test_book_rejects_negative_copies():
+    with pytest.raises(ValueError):
+        make_book(copies=-1)
