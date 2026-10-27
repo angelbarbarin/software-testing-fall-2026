@@ -17,13 +17,14 @@ from loan import Loan
 class Library:
     """Coordinates the catalog, the members and their loans."""
 
-    def __init__(self, clock=date.today):
+    def __init__(self, clock=date.today, notifier=None):
         self._books = {}
         self._members = {}
         self._loans = {}
         self._clock = clock
         self._charged_fees = defaultdict(Decimal)
         self._reservations = defaultdict(deque)
+        self._notifier = notifier
 
     def add_book(self, book):
         self._books[book.isbn] = book
@@ -59,6 +60,9 @@ class Library:
         member.return_book(isbn)
         book.return_copy()
         self._close_loan(member_id, isbn)
+        queue = self._reservations[isbn]
+        if queue:
+            self._notifier.notify(queue.popleft(), book)
 
     def total_fees_for_member(self, member_id):
         member = self.get_member(member_id)
