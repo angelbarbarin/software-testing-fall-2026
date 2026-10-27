@@ -1,7 +1,6 @@
 """Library catalog and lending operations."""
 
 from datetime import date
-from decimal import Decimal
 
 from exceptions import (
     AlreadyBorrowedError,
@@ -47,7 +46,7 @@ class Library:
     def calculate_late_fee(self, member_id, isbn):
         loan = self.get_loan(member_id, isbn)
         days_overdue = max(0, (self._clock() - loan.due_date).days)
-        return days_overdue * Decimal("1.00")
+        return days_overdue * self.get_member(member_id).daily_late_fee
 
     def return_book(self, member_id, isbn):
         member = self.get_member(member_id)
