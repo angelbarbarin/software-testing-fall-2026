@@ -3,6 +3,9 @@ import pytest
 from exceptions import BorrowLimitExceededError, InvalidReturnError
 from member import Member
 
+CLEAN_CODE = "0306406152"
+CLEAN_CODER = "9780132350884"
+
 
 def test_member_is_created_without_borrowed_books():
     member = Member("M001", "Ana Lopez")
@@ -23,24 +26,24 @@ def test_member_can_borrow_when_under_limit():
 
 def test_add_borrowed_book_records_isbn():
     member = Member("M001", "Ana Lopez")
-    member.add_borrowed_book("0306406152")
-    assert member.borrowed_books == ["0306406152"]
+    member.add_borrowed_book(CLEAN_CODE)
+    assert member.borrowed_books == [CLEAN_CODE]
 
 
 def test_add_borrowed_book_raises_when_limit_reached():
     member = Member("M001", "Ana Lopez", max_borrow_limit=1)
-    member.add_borrowed_book("0306406152")
+    member.add_borrowed_book(CLEAN_CODE)
     with pytest.raises(BorrowLimitExceededError):
-        member.add_borrowed_book("9780132350884")
+        member.add_borrowed_book(CLEAN_CODER)
 
 
 def test_return_book_removes_isbn():
     member = Member("M001", "Ana Lopez")
-    member.add_borrowed_book("0306406152")
-    member.return_book("0306406152")
+    member.add_borrowed_book(CLEAN_CODE)
+    member.return_book(CLEAN_CODE)
     assert member.borrowed_books == []
 
 
 def test_return_book_raises_when_book_was_not_borrowed():
     with pytest.raises(InvalidReturnError):
-        Member("M001", "Ana Lopez").return_book("0306406152")
+        Member("M001", "Ana Lopez").return_book(CLEAN_CODE)
