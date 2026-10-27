@@ -46,3 +46,14 @@ def test_return_book_notifies_first_member_in_queue(busy_library, notifier):
     busy_library.reserve_book("M003", ISBN)
     busy_library.return_book("M001", ISBN)
     notifier.notify.assert_called_once_with("M002", busy_library.get_book(ISBN))
+
+
+def test_reservations_advance_without_notifier(clock):
+    library = Library(clock=clock)
+    library.add_book(Book(ISBN, "Clean Code", "Robert C. Martin"))
+    library.register_member(Member("M001", "Ana Lopez"))
+    library.register_member(Member("M002", "Luis Perez"))
+    library.borrow_book("M001", ISBN)
+    library.reserve_book("M002", ISBN)
+    library.return_book("M001", ISBN)
+    assert library.reservations_for(ISBN) == []
