@@ -1,3 +1,6 @@
+import pytest
+
+from exceptions import BorrowLimitExceededError
 from member import Member
 
 
@@ -22,3 +25,10 @@ def test_add_borrowed_book_records_isbn():
     member = Member("M001", "Ana Lopez")
     member.add_borrowed_book("0306406152")
     assert member.borrowed_books == ["0306406152"]
+
+
+def test_add_borrowed_book_raises_when_limit_reached():
+    member = Member("M001", "Ana Lopez", max_borrow_limit=1)
+    member.add_borrowed_book("0306406152")
+    with pytest.raises(BorrowLimitExceededError):
+        member.add_borrowed_book("9780132350884")
