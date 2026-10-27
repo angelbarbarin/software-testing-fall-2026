@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import pytest
 
 from exceptions import BorrowLimitExceededError, InvalidReturnError
@@ -59,3 +61,15 @@ def test_return_book_raises_when_book_was_not_borrowed():
 )
 def test_borrow_limit_depends_on_member_category(category, limit):
     assert Member("M002", "Dra. Ruiz", category=category).max_borrow_limit == limit
+
+
+@pytest.mark.parametrize(
+    ("category", "fee"),
+    [
+        (MemberCategory.STUDENT, Decimal("1.00")),
+        (MemberCategory.FACULTY, Decimal("0.50")),
+        (MemberCategory.PUBLIC, Decimal("1.50")),
+    ],
+)
+def test_daily_late_fee_depends_on_member_category(category, fee):
+    assert Member("M002", "Dra. Ruiz", category=category).daily_late_fee == fee
