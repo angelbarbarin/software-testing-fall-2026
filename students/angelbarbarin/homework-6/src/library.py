@@ -40,6 +40,10 @@ class Library:
         term = title.lower()
         return [book for book in self._books.values() if term in book.title.lower()]
 
+    def search_by_author(self, author):
+        term = author.lower()
+        return [book for book in self._books.values() if term in book.author.lower()]
+
     @staticmethod
     def _lookup(registry, key, error):
         if key not in registry:
