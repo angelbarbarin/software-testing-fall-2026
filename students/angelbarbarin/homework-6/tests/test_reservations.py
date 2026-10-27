@@ -15,14 +15,19 @@ def notifier():
     return Mock()
 
 
-@pytest.fixture
-def busy_library(clock, notifier):
+def build_busy_library(clock, notifier=None):
+    """Library whose only copy is lent to M001 while M002 and M003 wait."""
     library = Library(clock=clock, notifier=notifier)
     library.add_book(Book(ISBN, "Clean Code", "Robert C. Martin"))
     for member_id in ("M001", "M002", "M003"):
         library.register_member(Member(member_id, f"Member {member_id}"))
     library.borrow_book("M001", ISBN)
     return library
+
+
+@pytest.fixture
+def busy_library(clock, notifier):
+    return build_busy_library(clock, notifier)
 
 
 def test_reservations_are_kept_in_fifo_order(busy_library):
@@ -49,11 +54,7 @@ def test_return_book_notifies_first_member_in_queue(busy_library, notifier):
 
 
 def test_reservations_advance_without_notifier(clock):
-    library = Library(clock=clock)
-    library.add_book(Book(ISBN, "Clean Code", "Robert C. Martin"))
-    library.register_member(Member("M001", "Ana Lopez"))
-    library.register_member(Member("M002", "Luis Perez"))
-    library.borrow_book("M001", ISBN)
+    library = build_busy_library(clock)
     library.reserve_book("M002", ISBN)
     library.return_book("M001", ISBN)
     assert library.reservations_for(ISBN) == []
