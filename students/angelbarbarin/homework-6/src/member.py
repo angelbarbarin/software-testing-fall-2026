@@ -1,5 +1,6 @@
 """Library member."""
 
+from dataclasses import dataclass
 from decimal import Decimal
 from enum import Enum
 
@@ -14,16 +15,18 @@ class MemberCategory(Enum):
     PUBLIC = "public"
 
 
-BORROW_LIMITS = {
-    MemberCategory.STUDENT: 3,
-    MemberCategory.FACULTY: 5,
-    MemberCategory.PUBLIC: 2,
-}
+@dataclass(frozen=True)
+class CategoryRules:
+    """Lending rules that apply to a member category."""
 
-DAILY_LATE_FEES = {
-    MemberCategory.STUDENT: Decimal("1.00"),
-    MemberCategory.FACULTY: Decimal("0.50"),
-    MemberCategory.PUBLIC: Decimal("1.50"),
+    borrow_limit: int
+    daily_late_fee: Decimal
+
+
+CATEGORY_RULES = {
+    MemberCategory.STUDENT: CategoryRules(3, Decimal("1.00")),
+    MemberCategory.FACULTY: CategoryRules(5, Decimal("0.50")),
+    MemberCategory.PUBLIC: CategoryRules(2, Decimal("1.50")),
 }
 
 
@@ -38,12 +41,12 @@ class Member:
         self.borrowed_books = []
         self.category = category
         if max_borrow_limit is None:
-            max_borrow_limit = BORROW_LIMITS[category]
+            max_borrow_limit = CATEGORY_RULES[category].borrow_limit
         self.max_borrow_limit = max_borrow_limit
 
     @property
     def daily_late_fee(self):
-        return DAILY_LATE_FEES[self.category]
+        return CATEGORY_RULES[self.category].daily_late_fee
 
     def can_borrow(self):
         return len(self.borrowed_books) < self.max_borrow_limit
