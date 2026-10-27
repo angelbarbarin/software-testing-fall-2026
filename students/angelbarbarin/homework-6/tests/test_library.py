@@ -50,3 +50,9 @@ def test_borrow_book_keeps_copy_when_member_reached_limit(library):
     with pytest.raises(BorrowLimitExceededError):
         library.borrow_book("M002", ISBN)
     assert library.get_book(ISBN).available_copies == 2
+
+
+def test_return_book_restores_copy(library):
+    library.borrow_book("M001", ISBN)
+    library.return_book("M001", ISBN)
+    assert library.get_book(ISBN).available_copies == 2
