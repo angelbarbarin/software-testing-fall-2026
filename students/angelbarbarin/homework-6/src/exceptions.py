@@ -27,3 +27,7 @@ class BookNotFoundError(LibraryError):
 
 class AlreadyBorrowedError(LibraryError):
     """Raised when a member tries to borrow a book they already have."""
+
+
+class ReservationError(LibraryError):
+    """Raised when a reservation does not make sense."""

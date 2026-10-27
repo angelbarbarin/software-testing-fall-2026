@@ -9,6 +9,7 @@ from exceptions import (
     BookNotFoundError,
     BorrowLimitExceededError,
     MemberNotFoundError,
+    ReservationError,
 )
 from loan import Loan
 
@@ -67,6 +68,8 @@ class Library:
         return sum(fees, self._charged_fees[member_id])
 
     def reserve_book(self, member_id, isbn):
+        if self.get_book(isbn).is_available():
+            raise ReservationError(f"{isbn} has copies available, borrow it instead")
         self._reservations[isbn].append(member_id)
 
     def reservations_for(self, isbn):
