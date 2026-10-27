@@ -75,3 +75,8 @@ def test_search_by_title_is_partial_and_case_insensitive(catalog):
 def test_search_by_author_is_partial_and_case_insensitive(catalog):
     titles = [book.title for book in catalog.search_by_author("gamma")]
     assert titles == ["Design Patterns"]
+
+
+def test_get_available_books_excludes_books_without_copies(catalog):
+    titles = [book.title for book in catalog.get_available_books()]
+    assert titles == ["Clean Code", "The Clean Coder"]
