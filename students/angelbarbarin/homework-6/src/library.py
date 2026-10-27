@@ -1,6 +1,7 @@
 """Library catalog and lending operations."""
 
 from datetime import date
+from decimal import Decimal
 
 from exceptions import (
     AlreadyBorrowedError,
@@ -53,6 +54,13 @@ class Library:
         book = self.get_book(isbn)
         member.return_book(isbn)
         book.return_copy()
+
+    def total_fees_for_member(self, member_id):
+        member = self.get_member(member_id)
+        fees = (
+            self.calculate_late_fee(member_id, isbn) for isbn in member.borrowed_books
+        )
+        return sum(fees, Decimal("0"))
 
     def search_by_title(self, title):
         return self._search("title", title)
