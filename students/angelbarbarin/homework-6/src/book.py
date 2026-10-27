@@ -5,6 +5,10 @@ class BookNotAvailableError(Exception):
     """Raised when no copies of a book are available."""
 
 
+class InvalidReturnError(Exception):
+    """Raised when returning a copy that was never lent."""
+
+
 class Book:
     """A title in the catalog with a number of physical copies."""
 
@@ -24,4 +28,6 @@ class Book:
         self.available_copies -= 1
 
     def return_copy(self):
+        if self.available_copies >= self.total_copies:
+            raise InvalidReturnError(f"Every copy of {self.isbn} is already on the shelf")
         self.available_copies += 1
