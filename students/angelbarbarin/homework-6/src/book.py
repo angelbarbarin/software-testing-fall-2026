@@ -12,6 +12,8 @@ class Book:
         self.isbn = self._normalize_isbn(isbn)
         self.title = self._validate_title(title)
         self.author = author
+        if total_copies < 0:
+            raise ValueError("Total copies cannot be negative")
         self.total_copies = total_copies
         self.available_copies = total_copies
 
