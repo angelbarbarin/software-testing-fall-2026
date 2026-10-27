@@ -1,4 +1,6 @@
-from book import Book
+import pytest
+
+from book import Book, BookNotAvailableError
 
 ISBN = "0306406152"
 
@@ -28,3 +30,9 @@ def test_borrow_decreases_available_copies():
     book = make_book(copies=2)
     book.borrow()
     assert book.available_copies == 1
+
+
+def test_borrow_raises_when_no_copies_available():
+    book = make_book(copies=0)
+    with pytest.raises(BookNotAvailableError):
+        book.borrow()
