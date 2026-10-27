@@ -68,6 +68,7 @@ class Library:
         return sum(fees, self._charged_fees[member_id])
 
     def reserve_book(self, member_id, isbn):
+        self.get_member(member_id)
         if self.get_book(isbn).is_available():
             raise ReservationError(f"{isbn} has copies available, borrow it instead")
         self._reservations[isbn].append(member_id)
