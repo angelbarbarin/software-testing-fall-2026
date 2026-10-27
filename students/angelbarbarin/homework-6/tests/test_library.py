@@ -1,7 +1,7 @@
 import pytest
 
 from book import Book
-from exceptions import MemberNotFoundError
+from exceptions import BookNotFoundError, MemberNotFoundError
 from library import Library
 from member import Member
 
@@ -38,3 +38,8 @@ def test_borrow_book_assigns_copy_to_member(library):
 def test_borrow_book_raises_for_unknown_member(library):
     with pytest.raises(MemberNotFoundError):
         library.borrow_book("M999", ISBN)
+
+
+def test_borrow_book_raises_for_unknown_isbn(library):
+    with pytest.raises(BookNotFoundError):
+        library.borrow_book("M001", "9999999999")
