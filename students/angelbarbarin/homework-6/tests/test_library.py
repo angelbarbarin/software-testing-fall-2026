@@ -1,7 +1,12 @@
 import pytest
 
 from book import Book
-from exceptions import BookNotFoundError, BorrowLimitExceededError, MemberNotFoundError
+from exceptions import (
+    AlreadyBorrowedError,
+    BookNotFoundError,
+    BorrowLimitExceededError,
+    MemberNotFoundError,
+)
 from library import Library
 from member import Member
 
@@ -80,3 +85,9 @@ def test_search_by_author_is_partial_and_case_insensitive(catalog):
 def test_get_available_books_excludes_books_without_copies(catalog):
     titles = [book.title for book in catalog.get_available_books()]
     assert titles == ["Clean Code", "The Clean Coder"]
+
+
+def test_borrow_book_rejects_same_book_twice_for_member(library):
+    library.borrow_book("M001", ISBN)
+    with pytest.raises(AlreadyBorrowedError):
+        library.borrow_book("M001", ISBN)
