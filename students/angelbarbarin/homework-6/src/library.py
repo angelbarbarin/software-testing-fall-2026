@@ -1,6 +1,11 @@
 """Library catalog and lending operations."""
 
-from exceptions import BookNotFoundError, BorrowLimitExceededError, MemberNotFoundError
+from exceptions import (
+    AlreadyBorrowedError,
+    BookNotFoundError,
+    BorrowLimitExceededError,
+    MemberNotFoundError,
+)
 
 
 class Library:
@@ -25,6 +30,8 @@ class Library:
     def borrow_book(self, member_id, isbn):
         book = self.get_book(isbn)
         member = self.get_member(member_id)
+        if isbn in member.borrowed_books:
+            raise AlreadyBorrowedError(f"{member.name} already has {isbn}")
         if not member.can_borrow():
             raise BorrowLimitExceededError(f"{member.name} reached the borrow limit")
         book.borrow()

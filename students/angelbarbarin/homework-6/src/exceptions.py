@@ -23,3 +23,7 @@ class MemberNotFoundError(LibraryError):
 
 class BookNotFoundError(LibraryError):
     """Raised when an ISBN is not part of the catalog."""
+
+
+class AlreadyBorrowedError(LibraryError):
+    """Raised when a member tries to borrow a book they already have."""
