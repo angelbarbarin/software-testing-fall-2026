@@ -14,6 +14,13 @@ from exceptions import (
 from loan import Loan
 
 
+class NullNotifier:
+    """Notifier used when the library has no notification channel."""
+
+    def notify(self, member_id, book):
+        """Ignore the notification."""
+
+
 class Library:
     """Coordinates the catalog, the members and their loans."""
 
@@ -24,7 +31,7 @@ class Library:
         self._clock = clock
         self._charged_fees = defaultdict(Decimal)
         self._reservations = defaultdict(deque)
-        self._notifier = notifier
+        self._notifier = notifier or NullNotifier()
 
     def add_book(self, book):
         self._books[book.isbn] = book
