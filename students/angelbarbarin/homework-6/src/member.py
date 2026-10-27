@@ -19,3 +19,6 @@ class Member:
         if not self.can_borrow():
             raise BorrowLimitExceededError(f"{self.name} reached the borrow limit")
         self.borrowed_books.append(isbn)
+
+    def return_book(self, isbn):
+        self.borrowed_books.remove(isbn)
