@@ -15,3 +15,7 @@ class InvalidReturnError(LibraryError):
 
 class BorrowLimitExceededError(LibraryError):
     """Raised when a member already has the maximum number of books."""
+
+
+class MemberNotFoundError(LibraryError):
+    """Raised when a member id is not registered."""
