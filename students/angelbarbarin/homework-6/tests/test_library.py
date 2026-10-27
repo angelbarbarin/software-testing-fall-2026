@@ -1,7 +1,7 @@
 import pytest
 
 from book import Book
-from exceptions import BookNotFoundError, MemberNotFoundError
+from exceptions import BookNotFoundError, BorrowLimitExceededError, MemberNotFoundError
 from library import Library
 from member import Member
 
@@ -43,3 +43,10 @@ def test_borrow_book_raises_for_unknown_member(library):
 def test_borrow_book_raises_for_unknown_isbn(library):
     with pytest.raises(BookNotFoundError):
         library.borrow_book("M001", "9999999999")
+
+
+def test_borrow_book_keeps_copy_when_member_reached_limit(library):
+    library.register_member(Member("M002", "Luis Perez", max_borrow_limit=0))
+    with pytest.raises(BorrowLimitExceededError):
+        library.borrow_book("M002", ISBN)
+    assert library.get_book(ISBN).available_copies == 2
