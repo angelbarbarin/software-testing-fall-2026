@@ -70,3 +70,8 @@ def catalog():
 def test_search_by_title_is_partial_and_case_insensitive(catalog):
     titles = [book.title for book in catalog.search_by_title("clean")]
     assert titles == ["Clean Code", "The Clean Coder"]
+
+
+def test_search_by_author_is_partial_and_case_insensitive(catalog):
+    titles = [book.title for book in catalog.search_by_author("gamma")]
+    assert titles == ["Design Patterns"]
