@@ -37,12 +37,14 @@ class Library:
         book.return_copy()
 
     def search_by_title(self, title):
-        term = title.lower()
-        return [book for book in self._books.values() if term in book.title.lower()]
+        return self._search("title", title)
 
     def search_by_author(self, author):
-        term = author.lower()
-        return [book for book in self._books.values() if term in book.author.lower()]
+        return self._search("author", author)
+
+    def _search(self, field, term):
+        term = term.lower()
+        return [b for b in self._books.values() if term in getattr(b, field).lower()]
 
     @staticmethod
     def _lookup(registry, key, error):
