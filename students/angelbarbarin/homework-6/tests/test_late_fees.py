@@ -13,3 +13,9 @@ def test_late_fee_is_zero_on_due_date(library, clock):
     library.borrow_book("M001", ISBN)
     clock.advance(14)
     assert library.calculate_late_fee("M001", ISBN) == Decimal("0")
+
+
+def test_late_fee_is_one_dollar_per_overdue_day(library, clock):
+    library.borrow_book("M001", ISBN)
+    clock.advance(17)
+    assert library.calculate_late_fee("M001", ISBN) == Decimal("3.00")
